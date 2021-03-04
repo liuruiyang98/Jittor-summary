@@ -12,8 +12,9 @@ summary(your_model, input_size=(channels, H, W))
 ```
 
 * Note that the `input_size` is required to make a forward pass through the network.
-* Note that jittorsummary with **cuda** is not support.
-  * `jt.flags.use_cuda = 0`
+* Note that jittorsummary with **cuda** is support.
+  * `device = ‘cpu’`  ===> `jt.flags.use_cuda = 0`
+  * `device = ‘coda’`  ===> `jt.flags.use_cuda = 0`
 
 
 
@@ -125,7 +126,92 @@ Estimated Total Size (MB): 0.46
 
 
 
-#### 2.3 Try more models
+#### 2.3 Multiple Ouputs
+
+```python
+import jittor as jt
+from jittor import init
+from jittor import nn
+from jittorsummary import summary
+
+class MultipleOutputNet(nn.Module):
+    def __init__(self):
+        super(MultipleOutputNet, self).__init__()
+        self.conv1 = nn.Conv(1, 10, 5)
+        self.conv2 = nn.Conv(10, 20, 5)
+        self.conv2_drop = nn.Dropout(p=0.3)
+        self.fc1 = nn.Linear(320, 50)
+        self.fc2 = nn.Linear(50, 10)
+
+    def execute(self, x):
+        x = nn.relu(nn.max_pool2d(self.conv1(x), 2))
+        x = nn.relu(nn.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(((- 1), 320))
+        x = nn.relu(self.fc1(x))
+        x = self.fc2(x)
+        return nn.log_softmax(x, dim=1), x
+     
+model = MultipleOutputNet()
+summary(model, (1, 28, 28))
+```
+
+```txt
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+              Conv-1           [-1, 10, 24, 24]             260
+              Conv-2             [-1, 20, 8, 8]           5,020
+           Dropout-3             [-1, 20, 8, 8]               0
+            Linear-4                   [-1, 50]          16,050
+            Linear-5                   [-1, 10]             510
+ MultipleOutputNet-6       [[-1, 10], [-1, 10]]               0
+================================================================
+Total params: 21,840
+Trainable params: 21,840
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.06
+Params size (MB): 0.08
+Estimated Total Size (MB): 0.15
+----------------------------------------------------------------
+```
+
+
+
+#### 2.4 CUDA support
+
+```python
+import jittor as jt
+from jittor import init
+from jittor import nn
+from jittorsummary import summary
+
+class SingleInputNet(nn.Module):
+
+    def __init__(self):
+        super(SingleInputNet, self).__init__()
+        self.conv1 = nn.Conv(1, 10, 5)
+        self.conv2 = nn.Conv(10, 20, 5)
+        self.conv2_drop = nn.Dropout(p=0.3)
+        self.fc1 = nn.Linear(320, 50)
+        self.fc2 = nn.Linear(50, 10)
+
+    def execute(self, x):
+        x = nn.relu(nn.max_pool2d(self.conv1(x), 2))
+        x = nn.relu(nn.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(((-1), 320))
+        x = nn.relu(self.fc1(x))
+        x = self.fc2(x)
+        return nn.log_softmax(x, dim=1)
+      
+model = SingleInputNet()
+summary(model, (1, 28, 28), device='cuda')
+```
+
+
+
+#### 2.5 Try more models
 
 We provide the implementation of **UNet, UNet++** and **Dense-UNet**, which are based on Pytorch and Jittor, respectively. You can compare the results of `torchsummary` and `jittorsummary`.
 
