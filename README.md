@@ -125,20 +125,20 @@ Estimated Total Size (MB): 0.46
 
 
 
-#### 2.3 Try more
+#### 2.3 Try more models
 
-​		We provide the implementation of UNet, UNet++ and Dense-UNet, which are based on Python and jittor, respectively.
+We provide the implementation of **UNet, UNet++** and **Dense-UNet**, which are based on Pytorch and Jittor, respectively. You can compare the results of `torchsummary` and `jittorsummary`.
 
 ```txt
 |- jittorsummary
-		|- tests
-			|- test_models
-				|- DenseUNet_jittor.py
-				|- DenseUNet_pytorch.py
-				|- NestedUNet_jittor.py
-				|- NestedUNet_pytorch.py
-				|- UNet_jittor.py
-				|- UNet_pytorch.py
+	|- tests
+		|- test_models
+			|- DenseUNet_jittor.py
+			|- DenseUNet_pytorch.py
+			|- NestedUNet_jittor.py
+			|- NestedUNet_pytorch.py
+			|- UNet_jittor.py
+			|- UNet_pytorch.py
 ```
 
 
