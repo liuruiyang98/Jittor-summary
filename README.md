@@ -19,7 +19,7 @@ summary(your_model, input_size=(channels, H, W))
 
 ### 2. Example
 
-##### 2.1 CNN for MNIST
+#### 2.1 CNN for MNIST
 
 ```python
 import jittor as jt
@@ -73,7 +73,7 @@ Estimated Total Size (MB): 0.15
 
 
 
-##### 2.2 Multiple Inputs
+#### 2.2 Multiple Inputs
 
 ```python
 import jittor as jt
@@ -125,7 +125,7 @@ Estimated Total Size (MB): 0.46
 
 
 
-##### 2.3 Try more
+#### 2.3 Try more
 
 ​		We provide the implementation of UNet, UNet++ and Dense-UNet, which are based on Python and jittor, respectively.
 
