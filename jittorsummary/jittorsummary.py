@@ -9,8 +9,10 @@ from jittor import nn
 from jittor import init
 from collections import OrderedDict
 
+device_list = ['cpu', 'cuda']
 
-def summary(model, input_size, batch_size=-1, device=None, dtypes=None):
+def summary(model, input_size, batch_size=-1, device='cpu', dtypes=None):
+    assert(device in device_list)
     result, params_info = summary_string(
         model, input_size, batch_size, device, dtypes)
     print(result)
@@ -18,7 +20,13 @@ def summary(model, input_size, batch_size=-1, device=None, dtypes=None):
     return params_info
 
 
-def summary_string(model, input_size, batch_size=-1, device=None, dtypes=None):
+def summary_string(model, input_size, batch_size=-1, device='cpu', dtypes=None):
+    assert(device in device_list)
+    if device == 'cuda':
+        jt.flags.use_cuda = 1
+    else:
+        jt.flags.use_cuda = 0
+
     if dtypes == None:
         dtypes = [jt.float]*len(input_size)
 
@@ -43,10 +51,10 @@ def summary_string(model, input_size, batch_size=-1, device=None, dtypes=None):
 
             params = 0
             if hasattr(module, "weight") and hasattr(module.weight, "size"):
-                params += jt.prod(jt.array(list(module.weight.size())).int64())
+                params += np.prod(np.array(list(module.weight.size()), dtype = np.int64))
                 summary[m_key]["trainable"] = module.weight.requires_grad
             if hasattr(module, "bias") and hasattr(module.bias, "size"):
-                params += jt.prod(jt.array(list(module.bias.size())).int64())
+                params += np.prod(np.array(list(module.bias.size()), dtype = np.int64))
             summary[m_key]["nb_params"] = params
 
         if (

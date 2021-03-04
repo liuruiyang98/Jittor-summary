@@ -1,1 +1,1 @@
-from .test_model import SingleInputNet, MultipleInputNet, MultipleInputNetDifferentDtypes
+from .test_model import SingleInputNet, MultipleOutputNet, MultipleInputNet, MultipleInputNetDifferentDtypes

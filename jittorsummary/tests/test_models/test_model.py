@@ -20,6 +20,23 @@ class SingleInputNet(nn.Module):
         x = self.fc2(x)
         return nn.log_softmax(x, dim=1)
 
+class MultipleOutputNet(nn.Module):
+    def __init__(self):
+        super(MultipleOutputNet, self).__init__()
+        self.conv1 = nn.Conv(1, 10, 5)
+        self.conv2 = nn.Conv(10, 20, 5)
+        self.conv2_drop = nn.Dropout(p=0.3)
+        self.fc1 = nn.Linear(320, 50)
+        self.fc2 = nn.Linear(50, 10)
+
+    def execute(self, x):
+        x = nn.relu(nn.max_pool2d(self.conv1(x), 2))
+        x = nn.relu(nn.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+        x = x.view(((- 1), 320))
+        x = nn.relu(self.fc1(x))
+        x = self.fc2(x)
+        return nn.log_softmax(x, dim=1), x
+
 class MultipleInputNet(nn.Module):
 
     def __init__(self):
