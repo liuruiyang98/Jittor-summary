@@ -14,7 +14,7 @@ summary(your_model, input_size=(channels, H, W), device='cpu')
 * Note that the `input_size` is required to make a forward pass through the network.
 * Note that jittorsummary with **cuda** is support.
   * `device = ‘cpu’`  ===> `jt.flags.use_cuda = 0`
-  * `device = ‘coda’`  ===> `jt.flags.use_cuda = 1`
+  * `device = ‘cuda’`  ===> `jt.flags.use_cuda = 1`
 
 
 
