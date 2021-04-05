@@ -15,7 +15,7 @@ summary(your_model, input_size=(channels, H, W), device='cpu')
 * Note that jittorsummary with **cuda** is support.
   * `device = ‘cpu’`  ===> `jt.flags.use_cuda = 0`
   * `device = ‘cuda’`  ===> `jt.flags.use_cuda = 1`
-
+* Note that jittor version is **1.2.2.34**.
 
 
 ### 2. Example
